@@ -19,6 +19,42 @@ const promptUser = () => {
     ]);
 };
 
+const getDepartments = (answers) => {
+    const deptArr = [];
+
+    db.query(`SELECT * FROM departments`, (err, result) => {
+        if (err) {
+            return err;
+        }
+        for (let i = 0; i < result.length; i++) {
+            deptArr.push(result[i].name);
+        }
+        return deptArr;
+    })
+}
+const getMan = async () => {
+    let managerArr = [];
+    
+    for (let i = 0; i < rows.length; i++) {
+        managerArr.push(rows[i].last_name);
+        return managerArr;
+    }
+}
+
+const getRole = async () => {
+    db.query(`SELECT * FROM roles`, (err, rows) => {
+        for (let i = 0; i < rows.length; i++) {
+            roleArr.push(rows[i].title);
+        }
+        return roleArr;
+    })
+}
+
+
+
+
+
+
 promptUser()
     .then(({start}) => {
         if (start === 'View all departments') {
@@ -65,6 +101,17 @@ promptUser()
                 });
             })
         } else if (start === 'Add a role') {
+            let deptArr = [];
+
+            db.query(`SELECT * FROM departments`, (err, result) => {
+                if (err) {
+                    return err;
+                }
+                for (let i = 0; i < result.length; i++) {
+                    deptArr.push(result[i].name);
+                }
+            })
+            
             return inquirer.prompt([
                 {
                     type: 'input',
@@ -77,9 +124,10 @@ promptUser()
                     message: 'What is the salary for this role?'
                 },
                 {
-                    type: 'input',
+                    type: 'list',
                     name: 'department',
-                    message: 'Which department does the role belong to?'
+                    message: 'Which department does the role belong to?',
+                    choices: deptArr
                 }
             ])
             .then(({ roleName, salary, department }) => {
@@ -88,16 +136,93 @@ promptUser()
                     const sql2 = `INSERT INTO roles (title, salary, department_id)
                                 VALUES (?,?,?)`;
                     params = [roleName, salary, row[0].id];
-                    db.query(sql, params, (err, result) => {
-                        console.log(result);
+                    db.query(sql2, params, (err, result) => {
+                        if (!err) {
+                            console.log(`Added ${roleName} to the database`);
+                        }
+                    });
+                });
+            });
+        } else if (start === 'Add an employee') { 
+            // let managerArr = [];
+            // let roleArr = [];
+
+            // db.query(`SELECT * FROM employees`, (err, rows) => {
+            //     for (let i = 0; i < rows.length; i++) {
+            //         managerArr.push(rows[i].last_name);
+            //     }
+            // });
+            
+            // db.query(`SELECT * FROM roles`, (err, rows) => {
+            //     for (let i = 0; i < rows.length; i++) {
+            //         roleArr.push(rows[i].title);
+            //     }
+            // })
+
+            return inquirer
+                .prompt([
+                    {
+                        type: 'input',
+                        name: 'firstName',
+                        message: "What is the employee's first name?"
+                    },
+                    {
+                        type: 'input',
+                        name: 'lastName',
+                        message: "What is the employee's last name?"
+                    },
+                    {
+                        type: 'list',
+                        name: 'role',
+                        message: "What will this employee's role be?",
+                        choices: roleArr
+                    },
+                    {
+                        type: 'list',
+                        name: 'manager',
+                        message: "Who will this employee's manager be?",
+                        choices: managerArr
+                    }
+                ])
+                
+                .then(({ firstName, lastName, role, manager }) => {
+                    const sqlMan = `SELECT employees.id FROM employees WHERE last_name = ?`;
+                    const paramsMan = [manager];
+                    let managerID;
+                    const sqlRole = `SELECT roles.id FROM roles WHERE title = ?`;
+                    const paramsRole = [role];
+                    let roleID;
+
+                    db.query(sqlMan, paramsMan, (err, rows) => {
+                        if (err) {
+                            console.log(err);
+                        }
+                        managerID = rows[0].id;
+                        console.log('managerID: ' + managerID);
                     })
-                })
-            })
-            //const sql = `INSERT INTO roles (title, salary, department_id)`
 
-        } //else if (start === 'Add an employee') {
+                    db.query(sqlRole, paramsRole, (err, result) => {
+                        if (err) {
+                            console.log(err);
+                        }
+                        roleID = result[0].id;
+                        console.log('roleID: ' + roleID)
+                    })
+                    console.log('outer managerID: ' + managerID);
+                    console.log('outer roleID: ' + roleID);
 
-        // } else if (start === 'Update an employee role') {
+                    const sqlEmployee = `INSERT INTO employees (first_name, last_name, role_id, manager_id)
+                                VALUES (?,?,?,?)`;
+                    const paramsEmployee = [firstName, lastName, roleID, managerID];
+
+                    db.query(sqlEmployee, paramsEmployee, (err, result) => {
+                        if (err) {
+                            console.log(err);
+                        }
+                        console.log(`${firstName} ${lastName} was added to the database.`)
+                    });
+                });
+        }; // else if (start === 'Update an employee role') {
 
         // } else {
             
