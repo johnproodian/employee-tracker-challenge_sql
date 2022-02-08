@@ -20,16 +20,16 @@ VALUES
 
 
 
-INSERT INTO employees (first_name, last_name, role_id)
+INSERT INTO employees (first_name, last_name, role_id, manager_id)
 VALUES
-    ('Ronald', 'Firbank', 1),
-    ('Virginia', 'Woolf', 4),
-    ('Piers', 'Gaveston', 9),
-    ('Charles', 'LeRoi', 2),
-    ('Katherine', 'Mansfield', 3),
-    ('Dora', 'Carrington', 6),
-    ('Edward', 'Bellamy', 8),
-    ('Montague', 'Summers', 7),
-    ('Octavia', 'Butler', 3),
-    ('Unica', 'Zurn', 1);
+    ('Ronald', 'Firbank', 9, NULL),
+    ('Virginia', 'Woolf', 4, NULL),
+    ('Charles', 'LeRoi', 2, 2),
+    ('Piers', 'Gaveston', 1, 3),
+    ('Katherine', 'Mansfield', 3, NULL),
+    ('Dora', 'Carrington', 6, 4),
+    ('Montague', 'Summers', 7, NULL),
+    ('Edward', 'Bellamy', 8, 7),
+    ('Octavia', 'Butler', 3, NULL),
+    ('Unica', 'Zurn', 1, 3);
     

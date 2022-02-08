@@ -37,7 +37,8 @@ promptUser()
                 console.table(rows);
             });
         } else if (start === 'View all employees') {
-            const sql = `SELECT employees.id, employees.first_name, employees.last_name, roles.title AS job_title, departments.name AS department, roles.salary
+            // fix manager...
+            const sql = `SELECT employees.id, employees.first_name, employees.last_name, roles.title AS job_title, departments.name AS department, roles.salary, employees.last_name AS manager
                         FROM employees 
                         JOIN roles 
                         ON employees.role_id = roles.id 
@@ -47,11 +48,54 @@ promptUser()
             db.query(sql, (err, rows) => {
                 console.table(rows);
             })
-        } //else if (start === 'Add a department') {
+        } else if (start === 'Add a department') {
+            return inquirer.prompt([
+                {
+                    type: 'input',
+                    name: 'department',
+                    message: 'What is the name of the department you would like to add?'
+                }
+            ])
+            .then(({ department }) => {
+                //const params = department
+                const sql = `INSERT INTO departments (name)
+                            VALUES (?)`;
+                db.query(sql, department, (err, result) => {
+                    console.log(`Added ${department} to the database`);
+                });
+            })
+        } else if (start === 'Add a role') {
+            return inquirer.prompt([
+                {
+                    type: 'input',
+                    name: 'roleName',
+                    message: 'What is the name of the new role?'
+                },
+                {
+                    type: 'input',
+                    name: 'salary',
+                    message: 'What is the salary for this role?'
+                },
+                {
+                    type: 'input',
+                    name: 'department',
+                    message: 'Which department does the role belong to?'
+                }
+            ])
+            .then(({ roleName, salary, department }) => {
+                const sql = `SELECT departments.id FROM departments WHERE departments.name = ?`
+                db.query(sql, department, (err, row) => {
+                    const sql2 = `INSERT INTO roles (title, salary, department_id)
+                                VALUES (?,?,?)`;
+                    params = [roleName, salary, row[0].id];
+                    db.query(sql, params, (err, result) => {
+                        console.log(result);
+                    })
+                })
+            })
+            //const sql = `INSERT INTO roles (title, salary, department_id)`
 
-        // } else if (start === 'Add a role') {
-
-        // } else if (start === 'Add an employee') {
+        } //else if (start === 'Add an employee') {
 
         // } else if (start === 'Update an employee role') {
 
