@@ -4,7 +4,7 @@ const mysql = require('mysql2');
 const db = mysql.createConnection({
     host: 'localhost',
     user: 'root',
-    password: 'myTantrum7!',
+    password: 'Password1!',
     database: 'tracked_employees'
 });
 
@@ -144,20 +144,26 @@ promptUser()
                 });
             });
         } else if (start === 'Add an employee') { 
-            // let managerArr = [];
-            // let roleArr = [];
+            let managerArr = [];
+            let roleArr = [];
 
-            // db.query(`SELECT * FROM employees`, (err, rows) => {
-            //     for (let i = 0; i < rows.length; i++) {
-            //         managerArr.push(rows[i].last_name);
-            //     }
-            // });
+            db.query(`SELECT * FROM employees`, (err, rows) => {
+                if (err) {
+                    return err;
+                }
+                for (let i = 0; i < rows.length; i++) {
+                    managerArr.push(rows[i].last_name);
+                }
+            });
             
-            // db.query(`SELECT * FROM roles`, (err, rows) => {
-            //     for (let i = 0; i < rows.length; i++) {
-            //         roleArr.push(rows[i].title);
-            //     }
-            // })
+            db.query(`SELECT * FROM roles`, (err, rows) => {
+                if (err) {
+                    return err;
+                }
+                for (let i = 0; i < rows.length; i++) {
+                    roleArr.push(rows[i].title);
+                }
+            });
 
             return inquirer
                 .prompt([
@@ -227,4 +233,5 @@ promptUser()
         // } else {
             
         // }
-    });
+    })
+        .then()
