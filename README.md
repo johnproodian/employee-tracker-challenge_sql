@@ -6,7 +6,7 @@ The purpose of this challenge was to create a command-line application from scra
 
 ## Screenshot
 
-[Employee Tracker Screenshot](./assets/employee-tracker-screeshot.png)
+![Employee Tracker Screenshot](./assets/employee-tracker-screeshot.png)
 
 ## Built With
 * JavaScript
