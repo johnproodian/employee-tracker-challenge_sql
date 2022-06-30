@@ -15,3 +15,10 @@ It should look like this:
 * JavaScript
 * Node.js
 * MySQL
+
+## (Recently Learned) Skills Used
+* configuring a Node.js application to connect to a MySQL database
+* creating and dropping databases and tables
+* using CRUD (create, read, update, delete) methods to work with persistent data
+* creating schema and seed files for development
+* writing join statements to establish relations between data in three separate tables using primary and foreign keys
