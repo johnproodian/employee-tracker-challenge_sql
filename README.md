@@ -7,7 +7,7 @@ The purpose of this challenge was to create a command-line application from scra
 ## Usage
 See my walkthrough [here](https://drive.google.com/file/d/1oKlquC55rEU4oDeYHDDA7-DOJVwrPkl_/view) to run the application on the command line.
 
-It should look like this:
+It should look something like this:
 
 ![Employee Tracker Screenshot](./assets/employee-tracker-screeshot.png)
 
