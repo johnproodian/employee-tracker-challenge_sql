@@ -14,7 +14,7 @@ It should look something like this:
 ## Built With
 * JavaScript
 * Node.js
-* MySQL
+* SQL/MySQL
 
 ## (Recently Learned) Skills Used
 * configuring a Node.js application to connect to a MySQL database
